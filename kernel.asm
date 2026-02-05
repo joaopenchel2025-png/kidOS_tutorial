@@ -3,23 +3,23 @@
 
 jmp OSMain
 
-;_____________________________
-;Directives and Inclusions____
+;Directives and Inclusions
+
+%INCLUDE "monitor.lib"
 
 
 
-
-
-;_____________________________
-;Starting the System _________
+;Starting the System 
 
 OSMain:
 	call ConfigSegment
 	call ConfigStack
+	call VGA.SetVideoMode
+	call DrawBackground
+	call EffectInit
+	jmp END
 
-
-;_____________________________
-;Kernel Functions ____________
+;Kernel Functions
 
 ConfigSegment:
 	mov ax, es
@@ -33,32 +33,13 @@ ConfigStack:
 	ret
 
 END:
-	int 19h
+	mov ah, 00h
+	int 16h
+	mov ax, 0040h
+	mov ds, ax
+	mov ax, 1234h
+	mov [0072], ax
+	jmp 0ffffh:0000h
+	
 
-
-;_____________________________
-;System Functions ____________
-
-PrintString:
-	mov ah, 09h
-	mov bh, [Pagination]
-	mov bl, 1111_0001b
-	mov cx, 1
-	mov al, [si]
-	print:
-		int 10h
-		inc si
-		call MoveCursor
-		mov ah, 09h
-		mov al, [si]
-		cmp al, 0
-		jne print
-	ret
-
-MoveCursor:
-	mov ah, 02h
-	mov bh, [Pagination]
-	inc dl
-	int 10h
-	ret
 
