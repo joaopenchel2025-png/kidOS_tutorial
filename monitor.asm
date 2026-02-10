@@ -13,11 +13,11 @@ NameSystem db "KidOS",0
 
 ; Window Configurations ______________________________
 
-Count dw 0
+Count db 0
 
 BackWidth dw 0000h
 BackHeight dw 0000h
-BackColor db 46
+BackColor db 1
 Pagination db 0
 CursorX db 15
 CursorY db 12
@@ -67,7 +67,6 @@ DrawBackground:
 PrintString:
         mov ah, 09h
         mov bh, [Pagination]
-        ;mov bl, 1111_0001b
         mov cx, 1
         mov al, [si]
         print:
@@ -90,7 +89,7 @@ MoveCursor:
 ; Effect Initialization
 
 EffectInit:
-	mov bl, 44
+	mov bl, 0
 	start:
 		mov dh, [CursorY]
 		mov dl, [CursorX]
@@ -100,55 +99,43 @@ EffectInit:
 		pusha
 		mov bl, [State]
 		cmp bl, 0
-		je Increment
+		jne Decrement
 	Increment:
 		popa
 		inc bl
 		call Waiting
-		cmp bl, 50
+		cmp bl, 255
 		jne start
 		pusha
 		mov bl, 1
 		mov byte[State], bl
-		popa
 	Decrement:
 		popa
 		dec bl
 		call Waiting
-		cmp bl, 44
+		cmp bl, 0
 		jne start
 		pusha
 		mov bl, 0
 		mov [State], bl
-		mov bx, [Count]
-		inc bx
-		mov [Count], bx
-		cmp bx, 5000
-		jne ReturnLoop
-		jmp ReturnProg
-	ReturnLoop:
+		mov bl, [Count]
+		inc bl
+		mov [Count], bl
+		cmp bl, 5
+		jne start
 		popa
-		jmp start
-	ReturnProg:
-		popa
-		ret
-	ret
-
-Waiting:
-	pusha
-	mov bx, 0
-	time:
-		inc bx
-		cmp bx, 50000
-		jne time
-	popa
-	ret
+		ret	
 
 
-
-
-
-
+ Waiting:
+ 	pusha
+ 	mov ah, 86h
+ 	mov cx, 0000h
+ 	mov dx, 2000
+ 	int 15h
+ 	popa
+ 	ret
+	
 ; End ________________________
 
 %ENDIF

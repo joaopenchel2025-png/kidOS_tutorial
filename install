@@ -1,0 +1,17 @@
+#!/bin/bash
+
+export PATH=/mingw64:/mingw64/bin:$PATH
+
+yes | pacman -S binutils tmux vim nasm
+
+yes | pacman -S mingw-w64-x86_64-glfw
+
+yes | pacman -S mingw-w64-x86_64-glew
+
+yes | pacman -S mingw-w64-x86_64-glade
+
+yes | pacman -S mingw-w64-x86_64-vulkan-devel
+
+pacman -S --noconfirm mingw-w64-x86_64-qemu
+
+

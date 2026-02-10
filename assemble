@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cp monitor.asm monitor.lib
+cp wmemory.asm wmemory.lib
+cp disk.asm disk.lib
+
+nasm boot.asm
+nasm kernel.asm
+nasm window.asm
+
+cat boot kernel window > hdkidos
+
+
+
+
